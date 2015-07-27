@@ -50,11 +50,14 @@ function handler(req, res) {
     } else {
       try {
         res.setTimeout(25000);
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Credentials', false);
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         request(req.url.slice(1), {encoding: null, rejectUnauthorized: false}, function(error, response, body) {
-          res.setHeader('Content-Type', response.headers['content-type'])
+          for (var key in response.headers) {
+            value = response.headers[key];
+            res.setHeader(key, value);
+          }
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Credentials', false);
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
           res.write(body)
           res.end()
         })
